@@ -1,6 +1,5 @@
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
+    id("theweather.lib")
 }
 
 android {
@@ -8,5 +7,6 @@ android {
 }
 
 dependencies {
-
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(project(":core-data"))
 }

@@ -10,9 +10,7 @@ repositories {
 group = "com.example.theweather"
 
 dependencies {
-//    compileOnly(libs.android.gradlePlugin)
-//    compileOnly(libs.kotlin.gradlePlugin)
-    compileOnly("com.android.tools.build:gradle:8.1.0") // Use your AGP version
+    compileOnly("com.android.tools.build:gradle:8.1.0")
     // Kotlin Gradle Plugin
     compileOnly("org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.21")
 }

@@ -28,11 +28,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "21"
     }
     buildFeatures {
         compose = true
@@ -49,10 +49,16 @@ dependencies {
     implementation(libs.bundles.compose.ui)
     implementation(platform(libs.androidx.compose.bom))
 
+    implementation(platform(libs.koin.bom))
+    implementation(libs.bundles.koin)
+
     // Debug UI
     debugImplementation(libs.bundles.compose.ui.debug)
 
+    implementation(project(":core-data"))
+    implementation(project(":feature-weather-api"))
+    implementation(project(":feature-weather-impl"))
+
     // Testing
     testImplementation(libs.bundles.unit.testing)
-    androidTestImplementation(libs.bundles.android.testing)
 }

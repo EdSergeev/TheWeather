@@ -24,3 +24,4 @@ rootProject.name = "TheWeather"
 include(":app")
 include(":feature-weather-api")
 include(":feature-weather-impl")
+include(":core-data")
