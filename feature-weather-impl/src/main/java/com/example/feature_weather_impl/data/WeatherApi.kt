@@ -9,7 +9,6 @@ import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
-import org.koin.core.parameter.parametersOf
 
 internal class WeatherApi(
     private val apiKey: String,
@@ -24,18 +23,14 @@ internal class WeatherApi(
         }
 
         install(Logging) {
-            logger = Logger.DEFAULT
-            level = LogLevel.INFO
+            logger = Logger.ANDROID
+            level = LogLevel.ALL
         }
 
         install(HttpTimeout) {
             requestTimeoutMillis = 30_000
             connectTimeoutMillis = 10_000
             socketTimeoutMillis = 30_000
-        }
-
-        defaultRequest {
-            parametersOf("appid", apiKey)
         }
     }
 
@@ -61,6 +56,7 @@ internal class WeatherApi(
                 parameter("lon", lon)
                 parameter("units", units)
                 parameter("lang", lang)
+                parameter("appid", apiKey)
 
                 if (exclude.isNotEmpty()) {
                     parameter("exclude", exclude.joinToString(","))
@@ -83,6 +79,8 @@ internal class WeatherApi(
                 parameter("lat", lat)
                 parameter("lon", lon)
                 parameter("limit", limit)
+                parameter("limit", limit)
+                parameter("appid", apiKey)
             }
             Result.success(response.body<List<LocationResponse>>())
         } catch (e: Exception) {

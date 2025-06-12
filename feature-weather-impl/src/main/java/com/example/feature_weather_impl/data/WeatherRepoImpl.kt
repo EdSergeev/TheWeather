@@ -7,6 +7,7 @@ import com.example.feature_weather_api.models.Location
 import com.example.feature_weather_api.models.LocationDesc
 import com.example.feature_weather_api.models.WeatherSummary
 import com.example.feature_weather_impl.data.mappers.toDomain
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -39,6 +40,10 @@ internal class WeatherRepoImpl(
             emit(Data.loading())
 
             val response = weatherApi.getLocationDesc(location.latitude, location.longitude)
+
+            //todo: don't commit
+            delay(2000)
+
             if (response.isSuccess) {
                 emit(Data.success(response.getOrThrow().first().toDomain()))
             } else {

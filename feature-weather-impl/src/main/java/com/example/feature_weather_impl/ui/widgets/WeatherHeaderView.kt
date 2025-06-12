@@ -1,13 +1,16 @@
 package com.example.feature_weather_impl.ui.widgets
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.LocationOn
@@ -20,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.core_data.Data
+import com.valentinilk.shimmer.shimmer
 
 @Composable
 fun WeatherHeaderView(city: Data<String>, modifier: Modifier = Modifier, onEditClick: () -> Unit) {
@@ -48,17 +52,19 @@ fun WeatherHeaderView(city: Data<String>, modifier: Modifier = Modifier, onEditC
                 maxLines = 1
             )
 
-            city.isLoading -> Text(
-                text = "Loading",
+            city.isLoading -> Box(
                 modifier = Modifier
-                    .weight(1f)
-                    .padding(end = 8.dp),
-                fontSize = 20.sp,
-                maxLines = 1
+                    .shimmer()
+                    .width(128.dp)
+                    .height(30.dp)
+                    .background(
+                        color = Color.LightGray,
+                        shape = RoundedCornerShape(8.dp)
+                    )
             )
 
             else -> Text(
-                text = "Error",
+                text = "<Unknown city>",
                 modifier = Modifier
                     .weight(1f)
                     .padding(end = 8.dp),
