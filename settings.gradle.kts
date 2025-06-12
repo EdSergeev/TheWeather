@@ -10,6 +10,7 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
     }
+    includeBuild("convention")
 }
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
@@ -21,3 +22,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "TheWeather"
 include(":app")
+include(":feature-weather-api")
+include(":feature-weather-impl")
