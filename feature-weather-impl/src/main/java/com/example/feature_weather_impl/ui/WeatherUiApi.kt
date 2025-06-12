@@ -12,12 +12,7 @@ internal interface WeatherUiApi {
 
     data class UiState(
         val city: Data<String>,
-        val weather: Data<Weather>,
+        val weather: Data<WeatherSummary>,
         val showRetryButton: Boolean
-    ) {
-        data class Weather(
-            val currentTemp: Float,
-            val currentWeatherIconUrl: String,
-        )
-    }
+    )
 }

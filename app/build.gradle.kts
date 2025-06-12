@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.theweather"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -48,14 +48,14 @@ dependencies {
     // UI Bundle
     implementation(libs.bundles.compose.ui)
     implementation(platform(libs.androidx.compose.bom))
+    debugImplementation(libs.bundles.compose.ui.debug)
 
     implementation(platform(libs.koin.bom))
     implementation(libs.bundles.koin)
 
-    // Debug UI
-    debugImplementation(libs.bundles.compose.ui.debug)
 
     implementation(project(":core-data"))
+    implementation(project(":core-ui"))
     implementation(project(":feature-weather-api"))
     implementation(project(":feature-weather-impl"))
 

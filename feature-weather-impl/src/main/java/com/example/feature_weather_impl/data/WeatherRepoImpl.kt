@@ -7,7 +7,6 @@ import com.example.feature_weather_api.models.Location
 import com.example.feature_weather_api.models.LocationDesc
 import com.example.feature_weather_api.models.WeatherSummary
 import com.example.feature_weather_impl.data.mappers.toDomain
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -20,11 +19,20 @@ internal class WeatherRepoImpl(
         return flow {
             emit(Data.loading())
 
-            val response = weatherApi.getWeather(location.latitude, location.longitude)
-            if (response.isSuccess) {
-//                emit(Data.success(response.getOrNull()))
-            } else {
-                emit(Data.error(response.exceptionOrNull() ?: Exception("Unknown error")))
+            val exclude = listOf(
+                "minutely",
+                "alerts"
+            )
+
+            try {
+                val response = weatherApi.getWeather(location.latitude, location.longitude, exclude)
+                if (response.isSuccess) {
+                    emit(Data.success(response.getOrThrow().toDomain()))
+                } else {
+                    throw response.exceptionOrNull() ?: Exception("Unknown error")
+                }
+            } catch (e: Exception) {
+                emit(Data.error(e))
             }
         }
     }
@@ -39,15 +47,16 @@ internal class WeatherRepoImpl(
 
             emit(Data.loading())
 
-            val response = weatherApi.getLocationDesc(location.latitude, location.longitude)
+            try {
+                val response = weatherApi.getLocationDesc(location.latitude, location.longitude)
 
-            //todo: don't commit
-            delay(2000)
-
-            if (response.isSuccess) {
-                emit(Data.success(response.getOrThrow().first().toDomain()))
-            } else {
-                emit(Data.error(response.exceptionOrNull() ?: Exception("Unknown error")))
+                if (response.isSuccess) {
+                    emit(Data.success(response.getOrThrow().first().toDomain()))
+                } else {
+                    throw response.exceptionOrNull() ?: Exception("Unknown error")
+                }
+            } catch (e: Exception) {
+                emit(Data.error(e))
             }
         }
     }

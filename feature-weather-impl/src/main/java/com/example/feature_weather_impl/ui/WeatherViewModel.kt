@@ -10,14 +10,12 @@ import com.example.feature_weather_impl.ui.WeatherUiApi.DomainState
 import com.example.feature_weather_impl.ui.WeatherUiApi.UiState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
@@ -77,12 +75,23 @@ internal class WeatherViewModel(
             .onEach { weather ->
                 domainState.update { it.copy(weatherSummary = weather) }
             }
+            .launchIn(viewModelScope)
     }
 
     fun requestLocation() {
         viewModelScope.launch {
             val location = locationService.getLastKnownLocation()
             locationFlow.emit(location)
+        }
+    }
+
+    fun onEditClick() {
+
+    }
+
+    fun onRetryClick() {
+        locationFlow.replayCache.firstOrNull()?.let { location ->
+            locationFlow.tryEmit(location)
         }
     }
 }

@@ -22,7 +22,7 @@ internal data class CurrentWeather(
     val dt: Long,
     val sunrise: Long? = null,
     val sunset: Long? = null,
-    val temp: Double,
+    val temp: Float,
     @SerialName("feels_like")
     val feelsLike: Double,
     val pressure: Int,
@@ -50,7 +50,7 @@ internal data class MinutelyWeather(
 @Serializable
 internal data class HourlyWeather(
     val dt: Long,
-    val temp: Double,
+    val temp: Float,
     @SerialName("feels_like")
     val feelsLike: Double,
     val pressure: Int,
@@ -103,12 +103,12 @@ internal data class DailyWeather(
 
 @Serializable
 internal data class DailyTemp(
-    val day: Double,
-    val min: Double,
-    val max: Double,
-    val night: Double,
-    val eve: Double,
-    val morn: Double
+    val day: Float,
+    val min: Float,
+    val max: Float,
+    val night: Float,
+    val eve: Float,
+    val morn: Float
 )
 
 @Serializable

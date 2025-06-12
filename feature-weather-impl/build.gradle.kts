@@ -21,11 +21,12 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.bundles.compose.ui)
     implementation(platform(libs.androidx.compose.bom))
+    debugImplementation(libs.bundles.compose.ui.debug)
 
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.google.play.services.location)
 
-
     implementation(project(":core-data"))
+    implementation(project(":core-ui"))
     implementation(project(":feature-weather-api"))
 }

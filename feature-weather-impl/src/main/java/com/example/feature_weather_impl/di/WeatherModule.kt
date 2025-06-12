@@ -13,7 +13,7 @@ import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val weatherModule = module {
-    factory { WeatherApi(apiKey = "2f392732bfd67edf7c366faa7444a798") }
+    factory { WeatherApi(apiKey = "f278a11b85e680d8828f6e4e36d78059") }
     singleOf(::WeatherRepoImpl) { bind<WeatherRepo>() }
     factoryOf(::WeatherUiStateMapper)
     factoryOf(::LocationService)

@@ -1,12 +1,16 @@
 import com.example.feature_weather_impl.data.models.LocationResponse
 import com.example.feature_weather_impl.data.models.WeatherResponse
-import io.ktor.client.*
-import io.ktor.client.call.*
-import io.ktor.client.engine.okhttp.*
-import io.ktor.client.plugins.*
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.client.plugins.logging.*
-import io.ktor.client.request.*
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.logging.ANDROID
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
+import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.request.get
+import io.ktor.client.request.parameter
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
@@ -51,7 +55,7 @@ internal class WeatherApi(
         lang: String = "en"
     ): Result<WeatherResponse> {
         return try {
-            val response = httpClient.get("https://api.openweathermap.org/data/3.0") {
+            val response = httpClient.get("https://api.openweathermap.org/data/3.0/onecall") {
                 parameter("lat", lat)
                 parameter("lon", lon)
                 parameter("units", units)
