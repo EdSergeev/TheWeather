@@ -5,7 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.core_data.Data
 import com.example.feature_search_city.ui.SearchCityUiApi.DomainState
 import com.example.feature_search_city.ui.SearchCityUiApi.UiState
+import com.example.feature_weather_api.LocationRepo
 import com.example.feature_weather_api.WeatherRepo
+import com.example.feature_weather_api.models.LocationDesc
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -24,6 +26,7 @@ import kotlinx.coroutines.flow.update
 internal class SearchCityViewModel(
     private val uiStateMapper: SearchCityUiStateMapper,
     private val weatherRepo: WeatherRepo,
+    private val locationRepo: LocationRepo,
 ) : ViewModel() {
 
     private val domainState by lazy {
@@ -70,5 +73,9 @@ internal class SearchCityViewModel(
 
         domainState.update { it.copy(query = query) }
         queryFlow.tryEmit(query)
+    }
+
+    fun onCityClicked(city: LocationDesc) {
+        locationRepo.storeLocation(city.location)
     }
 }

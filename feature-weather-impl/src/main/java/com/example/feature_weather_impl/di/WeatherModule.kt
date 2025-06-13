@@ -1,7 +1,9 @@
 package com.example.feature_weather_impl.di
 
 import WeatherApi
+import com.example.feature_weather_api.LocationRepo
 import com.example.feature_weather_api.WeatherRepo
+import com.example.feature_weather_impl.data.LocationRepoImpl
 import com.example.feature_weather_impl.data.WeatherRepoImpl
 import com.example.feature_weather_impl.service.LocationService
 import com.example.feature_weather_impl.ui.WeatherUiStateMapper
@@ -15,6 +17,7 @@ import org.koin.dsl.module
 val weatherModule = module {
     factory { WeatherApi(apiKey = "f278a11b85e680d8828f6e4e36d78059") }
     singleOf(::WeatherRepoImpl) { bind<WeatherRepo>() }
+    singleOf(::LocationRepoImpl) { bind<LocationRepo>() }
     factoryOf(::WeatherUiStateMapper)
     factoryOf(::LocationService)
     viewModelOf(::WeatherViewModel)

@@ -71,7 +71,8 @@ fun SearchCityScreen(
             )
         }
 
-        SearchCityContentView(cities = uiState.cities, showEmptyResult = uiState.showEmptyResult) {
+        SearchCityContentView(cities = uiState.cities, showEmptyResult = uiState.showEmptyResult) { city ->
+            viewModel.onCityClicked(city)
             onBackClick()
         }
     }
