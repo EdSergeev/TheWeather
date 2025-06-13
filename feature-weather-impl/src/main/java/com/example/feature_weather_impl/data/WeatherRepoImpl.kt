@@ -62,6 +62,20 @@ internal class WeatherRepoImpl(
     }
 
     override fun findLocationByQuery(query: String): Flow<Data<List<LocationDesc>>> {
-        TODO("Not yet implemented")
+        return flow {
+            emit(Data.loading())
+
+            try {
+                val response = weatherApi.findLocation(query)
+
+                if (response.isSuccess) {
+                    emit(Data.success(response.getOrThrow().map { it.toDomain() }))
+                } else {
+                    throw response.exceptionOrNull() ?: Exception("Unknown error")
+                }
+            } catch (e: Exception) {
+                emit(Data.error(e))
+            }
+        }
     }
 }

@@ -83,6 +83,18 @@ internal class WeatherApi(
                 parameter("lat", lat)
                 parameter("lon", lon)
                 parameter("limit", limit)
+                parameter("appid", apiKey)
+            }
+            Result.success(response.body<List<LocationResponse>>())
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun findLocation(query: String, limit: Int = 5): Result<List<LocationResponse>> {
+        return try {
+            val response = httpClient.get("https://api.openweathermap.org/geo/1.0/direct") {
+                parameter("q", query)
                 parameter("limit", limit)
                 parameter("appid", apiKey)
             }

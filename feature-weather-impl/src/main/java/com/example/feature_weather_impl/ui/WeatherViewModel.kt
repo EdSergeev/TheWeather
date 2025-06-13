@@ -85,10 +85,6 @@ internal class WeatherViewModel(
         }
     }
 
-    fun onEditClick() {
-
-    }
-
     fun onRetryClick() {
         locationFlow.replayCache.firstOrNull()?.let { location ->
             locationFlow.tryEmit(location)

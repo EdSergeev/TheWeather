@@ -25,6 +25,7 @@
             <option value="$PROJECT_DIR$/convention" />
             <option value="$PROJECT_DIR$/core-data" />
             <option value="$PROJECT_DIR$/core-ui" />
+            <option value="$PROJECT_DIR$/feature-search-city" />
             <option value="$PROJECT_DIR$/feature-weather-api" />
             <option value="$PROJECT_DIR$/feature-weather-impl" />
           </set>

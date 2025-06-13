@@ -25,7 +25,7 @@ import com.example.feature_weather_impl.ui.widgets.WeekWeatherView
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun WeatherScreen(modifier: Modifier = Modifier) {
+fun WeatherScreen(modifier: Modifier = Modifier, changeLocationClicked: () -> Unit) {
     val viewModel = koinViewModel<WeatherViewModel>()
     val hasLocationPermission by viewModel.hasLocationPermission.collectAsState()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -53,7 +53,7 @@ fun WeatherScreen(modifier: Modifier = Modifier) {
     }
     Column(modifier) {
         WeatherHeaderView(city = uiState.city, modifier = modifier) {
-            viewModel.onEditClick()
+            changeLocationClicked()
         }
 
         val weather = uiState.weather.content

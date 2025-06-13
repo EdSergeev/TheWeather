@@ -2,11 +2,12 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlinx.serialization)
 }
 
 android {
     namespace = "com.example.theweather"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.theweather"
@@ -53,11 +54,11 @@ dependencies {
     implementation(platform(libs.koin.bom))
     implementation(libs.bundles.koin)
 
-
     implementation(project(":core-data"))
     implementation(project(":core-ui"))
     implementation(project(":feature-weather-api"))
     implementation(project(":feature-weather-impl"))
+    implementation(project(":feature-search-city"))
 
     // Testing
     testImplementation(libs.bundles.unit.testing)

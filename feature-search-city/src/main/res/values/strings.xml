@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="search_city.placeholder">Search city…</string>
+    <string name="search_city.empty_result">No cities found</string>
+</resources>
