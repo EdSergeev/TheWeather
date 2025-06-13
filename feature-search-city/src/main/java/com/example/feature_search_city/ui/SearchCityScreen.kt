@@ -20,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -34,6 +35,11 @@ fun SearchCityScreen(
 ) {
     val viewModel = koinViewModel<SearchCityViewModel>()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val focusManager = LocalFocusManager.current
+    val goBack: () -> Unit = {
+        focusManager.clearFocus()
+        onBackClick()
+    }
 
     Column(modifier = modifier.fillMaxSize()) {
         Row(
@@ -43,7 +49,7 @@ fun SearchCityScreen(
                 .padding(8.dp)
                 .border(1.dp, MaterialTheme.colorScheme.secondary, MaterialTheme.shapes.large)
         ) {
-            IconButton(onClick = onBackClick) {
+            IconButton(onClick = goBack) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "Back",
@@ -71,9 +77,12 @@ fun SearchCityScreen(
             )
         }
 
-        SearchCityContentView(cities = uiState.cities, showEmptyResult = uiState.showEmptyResult) { city ->
+        SearchCityContentView(
+            cities = uiState.cities,
+            showEmptyResult = uiState.showEmptyResult
+        ) { city ->
             viewModel.onCityClicked(city)
-            onBackClick()
+            goBack()
         }
     }
 }
