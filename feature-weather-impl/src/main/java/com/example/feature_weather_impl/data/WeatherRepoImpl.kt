@@ -7,16 +7,27 @@ import com.example.feature_weather_api.models.Location
 import com.example.feature_weather_api.models.LocationDesc
 import com.example.feature_weather_api.models.WeatherSummary
 import com.example.feature_weather_impl.data.mappers.toDomain
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withContext
 
 internal class WeatherRepoImpl(
     private val weatherApi: WeatherApi,
 ) : WeatherRepo {
     private val locationCache = mutableMapOf<Location, LocationDesc>()
+    private val weatherCache = mutableMapOf<Location, WeatherSummary>()
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 
     override fun getWeather(location: Location): Flow<Data<WeatherSummary>> {
         return flow {
+            val cached = weatherCache[location]
+            if (cached != null) {
+                emit(Data.success(cached))
+                return@flow
+            }
+
             emit(Data.loading())
 
             val exclude = listOf(
@@ -25,9 +36,13 @@ internal class WeatherRepoImpl(
             )
 
             try {
-                val response = weatherApi.getWeather(location.latitude, location.longitude, exclude)
+                val response = withContext(ioDispatcher) {
+                    weatherApi.getWeather(location.latitude, location.longitude, exclude)
+                }
                 if (response.isSuccess) {
-                    emit(Data.success(response.getOrThrow().toDomain()))
+                    val weather = response.getOrThrow().toDomain()
+                    weatherCache[location] = weather
+                    emit(Data.success(weather))
                 } else {
                     throw response.exceptionOrNull() ?: Exception("Unknown error")
                 }
@@ -48,8 +63,9 @@ internal class WeatherRepoImpl(
             emit(Data.loading())
 
             try {
-                val response = weatherApi.getLocationDesc(location.latitude, location.longitude)
-
+                val response = withContext(ioDispatcher) {
+                    weatherApi.getLocationDesc(location.latitude, location.longitude)
+                }
                 if (response.isSuccess) {
                     emit(Data.success(response.getOrThrow().first().toDomain()))
                 } else {
@@ -66,8 +82,9 @@ internal class WeatherRepoImpl(
             emit(Data.loading())
 
             try {
-                val response = weatherApi.findLocation(query)
-
+                val response = withContext(ioDispatcher) {
+                    weatherApi.findLocation(query)
+                }
                 if (response.isSuccess) {
                     emit(Data.success(response.getOrThrow().map { it.toDomain() }))
                 } else {
