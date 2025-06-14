@@ -1,6 +1,5 @@
 package com.example.feature_weather_impl.ui
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.core_data.Data
@@ -52,7 +51,6 @@ internal class WeatherViewModel(
     val hasLocationPermission: StateFlow<Boolean> = _hasLocationPermission
 
     fun onCreated(viewCreatedScope: CoroutineScope) {
-        Log.d("WEATHER MAIN", "Init")
         if (locationRepo.getLocation() == null) {
             requestCurrentLocation()
         }
@@ -60,7 +58,6 @@ internal class WeatherViewModel(
         locationRepo.observeLocation()
             .distinctUntilChanged()
             .flatMapLatest { location ->
-                Log.d("WEATHER MAIN", "observeLocation event: viewCreatedScope")
                 weatherRepo.getLocationDesc(location)
             }
             .onEach { desc ->
@@ -71,13 +68,12 @@ internal class WeatherViewModel(
         locationRepo.observeLocation()
             .distinctUntilChanged()
             .flatMapLatest { location ->
-                Log.d("WEATHER MAIN", "observeLocation event: viewModelScope")
                 weatherRepo.getWeather(location)
             }
             .onEach { weather ->
                 domainState.update { it.copy(weatherSummary = weather) }
             }
-            .launchIn(viewModelScope)
+            .launchIn(viewCreatedScope)
     }
 
     fun requestCurrentLocation() {

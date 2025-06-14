@@ -16,7 +16,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,10 +37,15 @@ fun SearchCityScreen(
 ) {
     val viewModel = koinViewModel<SearchCityViewModel>()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val viewCreatedScope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
     val goBack: () -> Unit = {
         focusManager.clearFocus()
         onBackClick()
+    }
+
+    LaunchedEffect(viewModel) {
+        viewModel.onCreated(viewCreatedScope)
     }
 
     Column(modifier = modifier.fillMaxSize()) {

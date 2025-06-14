@@ -8,6 +8,7 @@ import com.example.feature_search_city.ui.SearchCityUiApi.UiState
 import com.example.feature_weather_api.LocationRepo
 import com.example.feature_weather_api.WeatherRepo
 import com.example.feature_weather_api.models.LocationDesc
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -51,7 +52,7 @@ internal class SearchCityViewModel(
             initialValue = uiStateMapper.mapState(domainState.value),
         )
 
-    init {
+    fun onCreated(viewCreatedScope: CoroutineScope) {
         queryFlow
             .flatMapLatest { query ->
                 if (query.length >= SearchCityUiApi.QUERY_MIN_LENGTH) {
@@ -63,7 +64,7 @@ internal class SearchCityViewModel(
             .onEach { cities ->
                 domainState.update { it.copy(cities = cities) }
             }
-            .launchIn(viewModelScope)
+            .launchIn(viewCreatedScope)
     }
 
     fun onQueryChange(query: String) {
