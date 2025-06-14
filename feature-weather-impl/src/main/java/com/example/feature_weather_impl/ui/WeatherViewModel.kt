@@ -1,5 +1,6 @@
 package com.example.feature_weather_impl.ui
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.core_data.Data
@@ -8,10 +9,12 @@ import com.example.feature_weather_api.WeatherRepo
 import com.example.feature_weather_impl.service.LocationService
 import com.example.feature_weather_impl.ui.WeatherUiApi.DomainState
 import com.example.feature_weather_impl.ui.WeatherUiApi.UiState
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.mapLatest
@@ -48,20 +51,27 @@ internal class WeatherViewModel(
     private val _hasLocationPermission = MutableStateFlow(locationService.checkLocationPermission())
     val hasLocationPermission: StateFlow<Boolean> = _hasLocationPermission
 
-    fun onCreated() {
-        requestLocation()
+    fun onCreated(viewCreatedScope: CoroutineScope) {
+        Log.d("WEATHER MAIN", "Init")
+        if (locationRepo.getLocation() == null) {
+            requestCurrentLocation()
+        }
 
         locationRepo.observeLocation()
+            .distinctUntilChanged()
             .flatMapLatest { location ->
+                Log.d("WEATHER MAIN", "observeLocation event: viewCreatedScope")
                 weatherRepo.getLocationDesc(location)
             }
             .onEach { desc ->
                 domainState.update { it.copy(location = desc) }
             }
-            .launchIn(viewModelScope)
+            .launchIn(viewCreatedScope)
 
         locationRepo.observeLocation()
+            .distinctUntilChanged()
             .flatMapLatest { location ->
+                Log.d("WEATHER MAIN", "observeLocation event: viewModelScope")
                 weatherRepo.getWeather(location)
             }
             .onEach { weather ->
@@ -70,9 +80,9 @@ internal class WeatherViewModel(
             .launchIn(viewModelScope)
     }
 
-    fun requestLocation() {
+    fun requestCurrentLocation() {
         viewModelScope.launch {
-            val location = locationRepo.getLocation() ?: locationService.getLastKnownLocation()
+            val location = locationService.getLastKnownLocation()
             locationRepo.storeLocation(location)
         }
     }

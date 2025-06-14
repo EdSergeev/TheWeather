@@ -32,20 +32,32 @@ import com.example.feature_weather_impl.R
 import com.valentinilk.shimmer.shimmer
 
 @Composable
-internal fun WeatherHeaderView(city: Data<String>, modifier: Modifier = Modifier, onEditClick: () -> Unit) {
+internal fun WeatherHeaderView(
+    city: Data<String>,
+    modifier: Modifier = Modifier,
+    onRequestCurrentLocation: () -> Unit,
+    onEditClick: () -> Unit,
+) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .padding(start = 8.dp, end = 16.dp, top = 8.dp, bottom = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         // location icon
-        Icon(
-            imageVector = Icons.Default.LocationOn,
-            contentDescription = "Location",
-            modifier = Modifier.size(32.dp),
-            tint = MaterialTheme.colorScheme.primary
-        )
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .clickable(onClick = onRequestCurrentLocation),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = Icons.Default.LocationOn,
+                contentDescription = "Location",
+                modifier = Modifier.size(32.dp),
+                tint = MaterialTheme.colorScheme.primary
+            )
+        }
         Spacer(modifier = Modifier.width(8.dp))
 
         // city
@@ -100,9 +112,14 @@ private fun RowScope.LocationText(city: String) {
 @Preview(showBackground = true)
 @Composable
 private fun PreviewWeatherHeaderViewSuccess() {
+    val clickHandle: () -> Unit = {}
     TheWeatherTheme {
         Surface {
-            WeatherHeaderView(Data.success("London")) {}
+            WeatherHeaderView(
+                city = Data.success("London"),
+                onRequestCurrentLocation = clickHandle,
+                onEditClick = clickHandle,
+            )
         }
     }
 }
@@ -110,9 +127,14 @@ private fun PreviewWeatherHeaderViewSuccess() {
 @Preview(showBackground = true)
 @Composable
 private fun PreviewWeatherHeaderViewLoading() {
+    val clickHandle: () -> Unit = {}
     TheWeatherTheme {
         Surface(Modifier.fillMaxWidth()) {
-            WeatherHeaderView(Data.loading()) {}
+            WeatherHeaderView(
+                city = Data.loading(),
+                onRequestCurrentLocation = clickHandle,
+                onEditClick = clickHandle,
+            )
         }
     }
 }
@@ -120,9 +142,14 @@ private fun PreviewWeatherHeaderViewLoading() {
 @Preview(showBackground = true)
 @Composable
 private fun PreviewWeatherHeaderViewError() {
+    val clickHandle: () -> Unit = {}
     TheWeatherTheme {
         Surface(Modifier.fillMaxWidth()) {
-            WeatherHeaderView(Data.error(Exception())) {}
+            WeatherHeaderView(
+                city = Data.error(Exception()),
+                onRequestCurrentLocation = clickHandle,
+                onEditClick = clickHandle,
+            )
         }
     }
 }

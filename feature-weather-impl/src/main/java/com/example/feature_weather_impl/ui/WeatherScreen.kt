@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -28,12 +29,13 @@ fun WeatherScreen(modifier: Modifier = Modifier, changeLocationClicked: () -> Un
     val viewModel = koinViewModel<WeatherViewModel>()
     val hasLocationPermission by viewModel.hasLocationPermission.collectAsStateWithLifecycle()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val viewCreatedScope = rememberCoroutineScope()
 
     val requestPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
         onResult = { permissions ->
             if (permissions.any { it.value }) {
-                viewModel.requestLocation()
+                viewModel.requestCurrentLocation()
             }
         }
     )
@@ -47,13 +49,16 @@ fun WeatherScreen(modifier: Modifier = Modifier, changeLocationClicked: () -> Un
             )
         }
     }
-    LaunchedEffect(Unit) {
-        viewModel.onCreated()
+    LaunchedEffect(viewModel) {
+        viewModel.onCreated(viewCreatedScope)
     }
     Column(modifier) {
-        WeatherHeaderView(city = uiState.city, modifier = modifier) {
-            changeLocationClicked()
-        }
+        WeatherHeaderView(
+            city = uiState.city,
+            modifier = modifier,
+            onRequestCurrentLocation = { viewModel.requestCurrentLocation() },
+            onEditClick = changeLocationClicked
+        )
 
         val weather = uiState.weather.content
         when {
