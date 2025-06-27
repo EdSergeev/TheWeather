@@ -38,13 +38,14 @@ import com.valentinilk.shimmer.shimmer
 internal fun SearchCityContentView(
     cities: Data<List<LocationDesc>>,
     showEmptyResult: Boolean,
+    modifier: Modifier = Modifier,
     onCityClick: (LocationDesc) -> Unit
 ) {
 
     val content = cities.content
     when {
         !content.isNullOrEmpty() -> {
-            LazyColumn {
+            LazyColumn(modifier) {
                 items(content) { city ->
                     CityItem(location = city) {
                         onCityClick.invoke(city)
@@ -53,7 +54,7 @@ internal fun SearchCityContentView(
             }
         }
 
-        cities.isLoading -> LazyColumn {
+        cities.isLoading -> LazyColumn(modifier) {
             items(5) {
                 LoadingCityItem()
             }

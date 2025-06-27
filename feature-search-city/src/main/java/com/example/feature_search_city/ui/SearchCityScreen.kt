@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -48,7 +49,11 @@ fun SearchCityScreen(
         viewModel.onCreated(viewCreatedScope)
     }
 
-    Column(modifier = modifier.fillMaxSize()) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .imePadding()
+    ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
@@ -86,7 +91,8 @@ fun SearchCityScreen(
 
         SearchCityContentView(
             cities = uiState.cities,
-            showEmptyResult = uiState.showEmptyResult
+            showEmptyResult = uiState.showEmptyResult,
+            modifier = Modifier.weight(1f),
         ) { city ->
             viewModel.onCityClicked(city)
             goBack()

@@ -4,8 +4,8 @@ import android.Manifest
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -52,27 +52,35 @@ fun WeatherScreen(modifier: Modifier = Modifier, changeLocationClicked: () -> Un
     LaunchedEffect(viewModel) {
         viewModel.onCreated(viewCreatedScope)
     }
-    Column(modifier) {
-        WeatherHeaderView(
-            city = uiState.city,
-            modifier = modifier,
-            onRequestCurrentLocation = { viewModel.requestCurrentLocation() },
-            onEditClick = changeLocationClicked
-        )
+    LazyColumn(modifier.fillMaxSize()) {
+        item {
+            WeatherHeaderView(
+                city = uiState.city,
+                modifier = modifier,
+                onRequestCurrentLocation = { viewModel.requestCurrentLocation() },
+                onEditClick = changeLocationClicked
+            )
+        }
 
         val weather = uiState.weather.content
         when {
             weather != null -> {
-                CurrentWeatherView(weather = weather.current)
-                TodayWeatherView(hours = weather.today)
-                WeekWeatherView(days = weather.week)
+                item {
+                    CurrentWeatherView(weather = weather.current)
+                }
+                item {
+                    TodayWeatherView(hours = weather.today)
+                }
+                item {
+                    WeekWeatherView(days = weather.week)
+                }
             }
 
-            uiState.weather.isLoading -> {
+            uiState.weather.isLoading -> item {
                 LoadingCurrentWeatherView()
             }
 
-            else -> {
+            else -> item {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
