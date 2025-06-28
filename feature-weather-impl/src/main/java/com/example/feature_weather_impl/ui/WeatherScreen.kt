@@ -35,12 +35,12 @@ fun WeatherScreen(modifier: Modifier = Modifier, changeLocationClicked: () -> Un
         contract = ActivityResultContracts.RequestMultiplePermissions(),
         onResult = { permissions ->
             if (permissions.any { it.value }) {
-                viewModel.requestCurrentLocation()
+                viewModel.onLocationPermissionUpdated()
             }
         }
     )
 
-    LaunchedEffect(key1 = hasLocationPermission) {
+    LaunchedEffect(viewModel) {
         if (!hasLocationPermission) {
             requestPermissionLauncher.launch(
                 arrayOf(
@@ -48,10 +48,9 @@ fun WeatherScreen(modifier: Modifier = Modifier, changeLocationClicked: () -> Un
                 )
             )
         }
-    }
-    LaunchedEffect(viewModel) {
         viewModel.onCreated(viewCreatedScope)
     }
+
     LazyColumn(modifier.fillMaxSize()) {
         item {
             WeatherHeaderView(

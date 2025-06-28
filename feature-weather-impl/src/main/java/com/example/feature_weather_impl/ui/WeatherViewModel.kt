@@ -76,11 +76,17 @@ internal class WeatherViewModel(
             .launchIn(viewCreatedScope)
     }
 
+
     fun requestCurrentLocation() {
         viewModelScope.launch {
             val location = locationService.getLastKnownLocation()
             locationRepo.storeLocation(location)
         }
+    }
+
+    fun onLocationPermissionUpdated() {
+        _hasLocationPermission.tryEmit(locationService.checkLocationPermission())
+        requestCurrentLocation()
     }
 
     fun onRetryClick() {
