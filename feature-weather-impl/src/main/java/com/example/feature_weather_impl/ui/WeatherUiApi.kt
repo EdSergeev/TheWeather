@@ -1,6 +1,7 @@
 package com.example.feature_weather_impl.ui
 
 import com.example.core_data.Data
+import com.example.core_ui.model.UiData
 import com.example.feature_weather_api.models.LocationDesc
 import com.example.feature_weather_api.models.WeatherSummary
 
@@ -11,8 +12,7 @@ internal interface WeatherUiApi {
     )
 
     data class UiState(
-        val city: Data<String>,
-        val weather: Data<WeatherSummary>,
-        val showRetryButton: Boolean
+        val city: UiData<String>,
+        val weather: UiData<WeatherSummary>,
     )
 }

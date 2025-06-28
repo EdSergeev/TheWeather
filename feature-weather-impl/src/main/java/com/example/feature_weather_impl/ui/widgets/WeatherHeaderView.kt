@@ -26,14 +26,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.core_data.Data
+import com.example.core_ui.model.UiData
 import com.example.core_ui.theme.TheWeatherTheme
 import com.example.feature_weather_impl.R
 import com.valentinilk.shimmer.shimmer
 
 @Composable
 internal fun WeatherHeaderView(
-    city: Data<String>,
+    city: UiData<String>,
     modifier: Modifier = Modifier,
     onRequestCurrentLocation: () -> Unit,
     onEditClick: () -> Unit,
@@ -116,7 +116,7 @@ private fun PreviewWeatherHeaderViewSuccess() {
     TheWeatherTheme {
         Surface {
             WeatherHeaderView(
-                city = Data.success("London"),
+                city = UiData.success("London"),
                 onRequestCurrentLocation = clickHandle,
                 onEditClick = clickHandle,
             )
@@ -131,7 +131,7 @@ private fun PreviewWeatherHeaderViewLoading() {
     TheWeatherTheme {
         Surface(Modifier.fillMaxWidth()) {
             WeatherHeaderView(
-                city = Data.loading(),
+                city = UiData.loading(),
                 onRequestCurrentLocation = clickHandle,
                 onEditClick = clickHandle,
             )
@@ -146,7 +146,7 @@ private fun PreviewWeatherHeaderViewError() {
     TheWeatherTheme {
         Surface(Modifier.fillMaxWidth()) {
             WeatherHeaderView(
-                city = Data.error(Exception()),
+                city = UiData.error(Exception()),
                 onRequestCurrentLocation = clickHandle,
                 onEditClick = clickHandle,
             )

@@ -27,7 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.core_data.Data
+import com.example.core_ui.model.UiData
 import com.example.core_ui.theme.TheWeatherTheme
 import com.example.feature_search_city.R
 import com.example.feature_weather_api.models.Location
@@ -36,7 +36,7 @@ import com.valentinilk.shimmer.shimmer
 
 @Composable
 internal fun SearchCityContentView(
-    cities: Data<List<LocationDesc>>,
+    cities: UiData<List<LocationDesc>>,
     showEmptyResult: Boolean,
     modifier: Modifier = Modifier,
     onCityClick: (LocationDesc) -> Unit
