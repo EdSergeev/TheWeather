@@ -13,8 +13,8 @@ internal class WeatherApp : Application() {
         startKoin {
             androidContext(this@WeatherApp)
             modules(
-                weatherModule,
                 searchCityModule,
+                weatherModule,
             )
         }
     }

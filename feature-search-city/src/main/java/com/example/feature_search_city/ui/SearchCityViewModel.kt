@@ -10,11 +10,13 @@ import com.example.feature_weather_api.WeatherRepo
 import com.example.feature_weather_api.models.LocationDesc
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
@@ -23,11 +25,11 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 
-@OptIn(ExperimentalCoroutinesApi::class)
+@OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 internal class SearchCityViewModel(
+    private val locationRepo: LocationRepo,
     private val uiStateMapper: SearchCityUiStateMapper,
     private val weatherRepo: WeatherRepo,
-    private val locationRepo: LocationRepo,
 ) : ViewModel() {
 
     private val domainState by lazy {
@@ -54,6 +56,7 @@ internal class SearchCityViewModel(
 
     fun onCreated(viewCreatedScope: CoroutineScope) {
         queryFlow
+            .debounce(SearchCityUiApi.QUERY_DEBOUNCE_MILLIS)
             .flatMapLatest { query ->
                 if (query.length >= SearchCityUiApi.QUERY_MIN_LENGTH) {
                     weatherRepo.findLocationByQuery(query)

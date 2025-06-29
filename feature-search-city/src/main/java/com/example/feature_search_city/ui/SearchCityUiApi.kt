@@ -18,5 +18,6 @@ interface SearchCityUiApi {
 
     companion object {
         const val QUERY_MIN_LENGTH = 2
+        const val QUERY_DEBOUNCE_MILLIS = 500L
     }
 }

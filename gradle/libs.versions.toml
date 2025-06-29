@@ -17,6 +17,7 @@ ktor = "3.1.3"
 play-services-location = "21.3.0"
 compose-shimmer = "1.3.3"
 nav3Core = "1.0.0-alpha03"
+lifecycleViewmodelNavigation3Android = "1.0.0-alpha02"
 
 [libraries]
 # Core Android
@@ -36,6 +37,7 @@ google-play-services-location = { group = "com.google.android.gms", name = "play
 shimmer = { group = "com.valentinilk.shimmer", name = "compose-shimmer", version.ref = "compose-shimmer" }
 androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "nav3Core" }
 androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "nav3Core" }
+androidx-lifecycle-viewmodel-navigation3-android = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-navigation3-android", version.ref = "lifecycleViewmodelNavigation3Android" }
 
 # di
 koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koin" }
@@ -76,6 +78,7 @@ compose-ui = [
     "shimmer",
     "androidx-navigation3-runtime",
     "androidx-navigation3-ui",
+    "androidx-lifecycle-viewmodel-navigation3-android",
 ]
 
 # Debug UI Bundle - UI tools for debug builds

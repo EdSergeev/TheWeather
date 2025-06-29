@@ -47,8 +47,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
 
     // UI Bundle
-    implementation(libs.bundles.compose.ui)
     implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.bundles.compose.ui)
     debugImplementation(libs.bundles.compose.ui.debug)
 
     implementation(platform(libs.koin.bom))

@@ -24,10 +24,10 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class WeatherViewModel(
+    private val locationRepo: LocationRepo,
+    private val locationService: LocationService,
     private val uiStateMapper: WeatherUiStateMapper,
     private val weatherRepo: WeatherRepo,
-    private val locationService: LocationService,
-    private val locationRepo: LocationRepo,
 ) : ViewModel() {
 
     private val domainState by lazy {
