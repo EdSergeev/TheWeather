@@ -12,12 +12,22 @@ import com.example.feature_weather_api.models.LocationDesc
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -39,21 +49,29 @@ class SearchCityViewModelTest {
         state = "New York",
         location = mockLocation
     )
+    private val initialUiState = UiState(
+        query = "",
+        cities = UiData.success(emptyList()),
+        showEmptyResult = false
+    )
+
 
     @Before
     fun setup() {
+        Dispatchers.setMain(testDispatcher)
         // Setup default mapper behavior
-        every { uiStateMapper.mapState(any()) } returns UiState(
-            query = "",
-            cities = UiData.success(emptyList()),
-            showEmptyResult = false
-        )
+        every { uiStateMapper.mapState(any()) } returns initialUiState
 
         viewModel = SearchCityViewModel(
             locationRepo = locationRepo,
             uiStateMapper = uiStateMapper,
             weatherRepo = weatherRepo,
         )
+    }
+
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
     }
 
     @Test
@@ -83,15 +101,6 @@ class SearchCityViewModelTest {
     fun `onQueryChange should update domain state and emit to query flow`() = runTest {
         // Given
         val query = "New York"
-        val initialDomainState = DomainState(
-            query = "",
-            cities = Data.success(emptyList())
-        )
-        val initialUiState = UiState(
-            query = "",
-            cities = UiData.success(content = emptyList()),
-            showEmptyResult = false
-        )
         val updatedDomainState = DomainState(
             query = query,
             cities = Data.success(emptyList())
@@ -102,7 +111,6 @@ class SearchCityViewModelTest {
             showEmptyResult = false
         )
 
-        every { uiStateMapper.mapState(initialDomainState) } returns initialUiState
         every { uiStateMapper.mapState(updatedDomainState) } returns expectedUiState
 
         // When
@@ -111,7 +119,6 @@ class SearchCityViewModelTest {
 
         // Then
         viewModel.uiState.test {
-            assertEquals(initialUiState, awaitItem())
             assertEquals(expectedUiState, awaitItem())
         }
         verify { uiStateMapper.mapState(updatedDomainState) }
@@ -201,12 +208,13 @@ class SearchCityViewModelTest {
 
         // When
         viewModel.onCreated(testScope)
-        viewModel.onQueryChange(query)
-        testScope.advanceTimeBy(SearchCityUiApi.QUERY_DEBOUNCE_MILLIS + 100)
 
         // Then
         viewModel.uiState.test {
-            awaitItem()// initial state
+            viewModel.onQueryChange(query)
+            testScope.advanceTimeBy(SearchCityUiApi.QUERY_DEBOUNCE_MILLIS + 100)
+
+            assertEquals(initialUiState, awaitItem())
             assertEquals(expectedUiState, awaitItem())
         }
     }
