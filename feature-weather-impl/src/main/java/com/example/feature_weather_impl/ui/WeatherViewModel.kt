@@ -30,14 +30,12 @@ internal class WeatherViewModel(
     private val weatherRepo: WeatherRepo,
 ) : ViewModel() {
 
-    private val domainState by lazy {
-        MutableStateFlow(
-            DomainState(
-                location = Data.loading(),
-                weatherSummary = Data.loading(),
-            )
+    private val domainState = MutableStateFlow(
+        DomainState(
+            location = Data.loading(),
+            weatherSummary = Data.loading(),
         )
-    }
+    )
 
     val uiState: StateFlow<UiState> = domainState
         .mapLatest { uiStateMapper.mapState(it) }

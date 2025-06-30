@@ -32,14 +32,12 @@ internal class SearchCityViewModel(
     private val weatherRepo: WeatherRepo,
 ) : ViewModel() {
 
-    private val domainState by lazy {
-        MutableStateFlow(
-            DomainState(
-                query = "",
-                cities = Data.success(emptyList()),
-            )
+    private val domainState = MutableStateFlow(
+        DomainState(
+            query = "",
+            cities = Data.success(emptyList()),
         )
-    }
+    )
 
     private val queryFlow = MutableSharedFlow<String>(
         replay = 1,

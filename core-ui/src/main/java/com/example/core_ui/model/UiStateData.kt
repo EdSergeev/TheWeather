@@ -3,7 +3,7 @@ package com.example.core_ui.model
 import androidx.compose.runtime.Stable
 
 @Stable
-class UiData<T>(
+data class UiData<T>(
     val isLoading: Boolean,
     val content: T?,
     val error: Throwable?
