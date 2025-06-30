@@ -23,4 +23,7 @@ dependencies {
     implementation(project(":core-data"))
     implementation(project(":core-ui"))
     implementation(project(":feature-weather-api"))
+
+    testImplementation(libs.bundles.unit.testing)
+    testImplementation(kotlin("test"))
 }
